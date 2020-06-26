@@ -1,12 +1,11 @@
-import {reactive, toRefs} from 'vue';
+import { reactive, toRefs } from "vue";
 
-export default function useCalculator(num1, num2){
-    console.log(num1, num2)
-    const results = reactive({
-        sum: num1 + num2,
-        product: num1 * num2
-    })
+export default function useCalculator(overflow, cost) {
+  console.log("Usecalculator", overflow, cost);
+  const results = reactive({
+    sum: overflow + cost,
+    product: overflow * cost,
+  });
 
-
-    return toRefs(results)
+  return toRefs(results);
 }

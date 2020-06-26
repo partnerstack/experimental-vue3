@@ -6,30 +6,30 @@
     <p>Overflow: {{ overflow }}</p>
     <p>Cost: ${{ cost }}</p>
     {{ deepness }}
-    <button @click="increaseCapacity()">Increase Capacity</button>
-    {{ sum }}
-    {{ product }}
-    <!-- attendee card -->
-    <CapacityCalc name="janks" />
+    <button @click="increaseCapacity">Increase Capacity</button>
+    Sum: {{ sum }}
+    Product: {{ product }}
   </div>
 </template>
 
 <script>
-// import { ref } from "@vue/composition-api"; // <-- Use this line if you're in a Vue 2 app with the composition API plugin
-import { ref, computed, reactive } from "vue"; // <-- Use this line if you're in a Vue 3 app
+import { computed, reactive, watch, toRefs } from "vue"; // <-- Use this line if you're in a Vue 3 app
 import useCalculator from "./composables/useCalculator";
 
 export default {
   setup(props, context) {
     console.log(props, context);
-    // console.log(CapacityCalc);
-    const capacity = ref(243);
+    // const capacity = ref(250);
+    // const sum = ref(0);
+    // const product = ref(0);
 
     const state = reactive({
       capacity: 243,
       deep: {
         wow: "so deep"
-      }
+      },
+      sum: 0,
+      product: 0
     });
     const deepness = computed(() => state.deep.wow);
 
@@ -50,12 +50,19 @@ export default {
     });
 
     function increaseCapacity() {
-      state.capacity++;
+      return state.capacity++;
     }
-    // const test = numberOfPods.value;
-    // const test1 = overflow.value;
 
-    const { sum, product } = useCalculator(overflow.value, cost.value);
+    watch(
+      () => state.capacity,
+      (overflow, cost) => {
+        const { sum, product } = useCalculator(overflow, cost);
+        state.sum = sum.value;
+        state.product = product.value;
+      }
+    );
+
+    const { capacity, sum, product } = toRefs(state);
 
     return {
       capacity,
